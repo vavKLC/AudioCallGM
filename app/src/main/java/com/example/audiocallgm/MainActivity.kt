@@ -16,12 +16,12 @@ private lateinit var binding: ActivityMainBinding
 
 private var mMute = false
 private val PERMISSION_REQ_ID_RECORD_AUDIO = 22
-private val PERMISSION_REQ_ID_CAMERA = PERMISSION_REQ_ID_RECORD_AUDIO + 1
 
+//app_id
 private val APP_ID = "22b0f0116b3e4c6dbafdcf37703285a6"
-// Fill the channel name.
+// название канала
 private val CHANNEL = "Test"
-// Fill the temp token generated on Agora Console.
+// токен который генерируется в агоре
 private val TOKEN = "cab5b8d7e6904d418f0695b7c249a571"
 private var mRtcEngine: RtcEngine ?= null
 private val mRtcEventHandler = object : IRtcEngineEventHandler() {
@@ -33,11 +33,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(R.layout.activity_main)
+
+        //пермишин
         if (checkSelfPermission(Manifest.permission.RECORD_AUDIO, PERMISSION_REQ_ID_RECORD_AUDIO)) {
             initializeAndJoinChannel();
         }
     }
 
+        //проверка
         private fun checkSelfPermission(permission: String, requestCode: Int): Boolean {
             if (ContextCompat.checkSelfPermission(this, permission) !=
                 PackageManager.PERMISSION_GRANTED
@@ -52,6 +55,7 @@ class MainActivity : AppCompatActivity() {
             return true
         }
 
+        //инициализация и подключение к каналу благодоря функция агоры, в начале проверяет app_id юзера позже создает канал
         private fun initializeAndJoinChannel() {
             try {
                 mRtcEngine = RtcEngine.create(baseContext, APP_ID, mRtcEventHandler)
@@ -60,12 +64,16 @@ class MainActivity : AppCompatActivity() {
             }
             mRtcEngine!!.joinChannel(TOKEN, CHANNEL, "", 0)
         }
+
+        //отключение звонка
         fun onCallEnded(view: View?){
             binding.btnCallEnd.setOnClickListener {
                 mRtcEngine?.leaveChannel()
                 RtcEngine.destroy()
             }
         }
+
+        //отключить звук
         fun onLocalMutedClicked(view: View?){
             binding.btnMute.setOnClickListener {
                 mMute = !mMute
